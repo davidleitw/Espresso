@@ -1,0 +1,126 @@
+basePath: /api/
+definitions:
+  serialization.Response:
+    type: object
+host: http://espresso.nctu.me:8080/
+info:
+  contact:
+    email: davidleitw@gmail.com
+    name: davidleitw
+  description: Expreesso calendar的api文檔, 方便串接前後端
+  license:
+    name: Apache 2.0
+  title: Espresso Example API File
+  version: 0.0.1
+paths:
+  /api/user/userLogin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用戶電子信箱(帳號)
+        in: header
+        name: account
+        required: true
+        type: string
+      - description: 用戶密碼
+        in: header
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/serialization.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/serialization.Response'
+      summary: 用戶登入
+      tags:
+      - User
+  /api/user/userLogout:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登出成功
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/serialization.Response'
+      summary: 用戶登出
+      tags:
+      - User
+  /api/user/userRegister:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 填入用戶的電子信箱
+        in: header
+        name: UserMail
+        required: true
+        type: string
+      - description: 填入用戶的使用者名稱 可隨時更改
+        in: header
+        name: UserName
+        required: true
+        type: string
+      - description: 填入用戶的密碼 需要八碼以上
+        in: header
+        name: UserPass
+        required: true
+        type: string
+      - description: 密碼確認, 需要UserPass參數相同
+        in: header
+        name: UserPassConfirm
+        required: true
+        type: string
+      - description: 用戶的電話號碼 如果使用者沒填 前端會補上00000000
+        in: header
+        name: USerRid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serialization.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/serialization.Response'
+      summary: 用戶註冊
+      tags:
+      - User
+  /api/user/usercheckLogin:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: "false"
+          schema:
+            type: string
+      summary: 確認登入狀態
+      tags:
+      - User
+swagger: "2.0"

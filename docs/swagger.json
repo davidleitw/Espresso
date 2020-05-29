@@ -1,0 +1,195 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Expreesso calendar的api文檔, 方便串接前後端",
+        "title": "Espresso Example API File",
+        "contact": {
+            "name": "davidleitw",
+            "email": "davidleitw@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0"
+        },
+        "version": "0.0.1"
+    },
+    "host": "http://espresso.nctu.me:8080/",
+    "basePath": "/api/",
+    "paths": {
+        "/api/user/userLogin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用戶登入",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用戶電子信箱(帳號)",
+                        "name": "account",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用戶密碼",
+                        "name": "password",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/serialization.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/serialization.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/userLogout": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用戶登出",
+                "responses": {
+                    "200": {
+                        "description": "登出成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/serialization.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/userRegister": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用戶註冊",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "填入用戶的電子信箱",
+                        "name": "UserMail",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入用戶的使用者名稱 可隨時更改",
+                        "name": "UserName",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入用戶的密碼 需要八碼以上",
+                        "name": "UserPass",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "密碼確認, 需要UserPass參數相同",
+                        "name": "UserPassConfirm",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用戶的電話號碼 如果使用者沒填 前端會補上00000000",
+                        "name": "USerRid",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/serialization.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/serialization.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/usercheckLogin": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "確認登入狀態",
+                "responses": {
+                    "200": {
+                        "description": "false",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "serialization.Response": {
+            "type": "object"
+        }
+    }
+}
