@@ -52,7 +52,7 @@ func NewRouter() *gin.Engine {
 			calendar.GET(":ID/getEventInfo", api.AuthSessionMiddle(), api.Test)                   // 點開單一事件, 得到詳細的資訊
 			calendar.PUT(":ID/updateEvent", api.AuthSessionMiddle(), api.Test)                    // 更新單一事件
 			calendar.POST(":ID/createNewEvent", api.AuthSessionMiddle(), api.CalendarCreateEvent) // 新增一筆事件
-			calendar.DELETE(":ID/deleteEvent", api.AuthSessionMiddle(), api.DeleteEvent)          // 刪除一筆事件
+			calendar.DELETE(":ID/deleteEvent", api.AuthSessionMiddle(), api.CalendarDeleteEvent)  // 刪除一筆事件
 		}
 		apiRoutes.POST("test", api.Test) // 測試function
 	}

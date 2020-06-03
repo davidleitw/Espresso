@@ -43,13 +43,12 @@ func CalendarCreateEvent(ctx *gin.Context) {
 	}
 }
 
-func DeleteEvent(ctx *gin.Context) {
+func CalendarDeleteEvent(ctx *gin.Context) {
 	var servicer service.CalendarDelete
 	//session := sessions.Default(ctx)
-	username := ctx.Param("ID")
 
 	if err := ctx.ShouldBind(&servicer); err == nil {
-		res := servicer.Delete(username)
-		ctx.JSON(http.StatusForbidden, res)
+		res := servicer.Delete(ctx.Param("ID"))
+        ctx.JSON(serialization.GetResStatus(res).(int), res)		
 	}
 }
