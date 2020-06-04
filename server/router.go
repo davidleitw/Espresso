@@ -49,8 +49,8 @@ func NewRouter() *gin.Engine {
 		calendar := apiRoutes.Group("/calendar")
 		{
 			calendar.GET(":ID/getAllEvent", api.AuthSessionMiddle(), api.CalendarGetAllEvent)     // 登入成功之後抓資料進入前端
-			calendar.GET(":ID/getEventInfo", api.AuthSessionMiddle(), api.Test)                   // 點開單一事件, 得到詳細的資訊
-			calendar.PUT(":ID/updateEvent", api.AuthSessionMiddle(), api.Test)                    // 更新單一事件
+			calendar.GET(":ID/getEventInfo", api.AuthSessionMiddle(), api.CalendarGetEventInfo)   // 點開單一事件, 得到詳細的資訊
+			calendar.PUT(":ID/updateEvent", api.AuthSessionMiddle(), api.CalendarUpdateEvent)     // 更新單一事件
 			calendar.POST(":ID/createNewEvent", api.AuthSessionMiddle(), api.CalendarCreateEvent) // 新增一筆事件
 			calendar.DELETE(":ID/deleteEvent", api.AuthSessionMiddle(), api.CalendarDeleteEvent)  // 刪除一筆事件
 		}

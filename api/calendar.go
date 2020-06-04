@@ -14,6 +14,13 @@ type EventItem struct {
 	StartTime string
 }
 
+// @Summary 登入時該用戶所有資料的概要
+// @Tags Calendar
+// @version 1.0
+// @accept application/json
+// @produce application/json
+// @Router /api/calendar/:ID/getAllEvent [post]
+// @Success 200 {object} serialization.Response
 func CalendarGetAllEvent(ctx *gin.Context) {
 	var EventSet []EventItem
 	var EventMainSet []models.EventMain
