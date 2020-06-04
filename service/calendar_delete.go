@@ -6,21 +6,33 @@ import (
 	"net/http"
 )
 
-type CalendarDelete struct {
+type CalendarDeletePoster struct {
 	Title     string `json:"title"`
 	StartTime string `json:"start_time"`
 }
 
-func (service *CalendarDelete) Delete(userID string) serial.Response {
-	var event models.Event
+func (service *CalendarDeletePoster) Delete(userID string) serial.Response {
+	// 刪除 先藉由 UserID, title, starttime 找到唯一的事件
+	// 拿到ID之後刪除兩個表中有同ID的事件
+	var emain models.EventMain
+	var edetail models.EventDetail
 
-	err := models.DB.Where("user_id = ? AND title = ? AND start_time = ?", models.GetFullEmail(userID), service.Title, service.StartTime).Delete(&event).Error
-	if err == nil {
-		// 204 刪除成功 沒有回傳值
-		return serial.BuildResponse(http.StatusNoContent, "null", "刪除成功")
+	email := models.GetFullEmail(userID)
+
+	models.DB.Model(&models.EventMain{}).Where(
+		"user_id=? AND title=? AND start_time=?",
+		email, service.Title, service.StartTime,
+	).First(&email)
+
+	calendarID := emain.CalendarID
+	err1 := models.DB.Where("calendar_id=?", calendarID).Delete(&emain).Error
+	err2 := models.DB.Where("calendar_id=?", calendarID).Delete(&edetail).Error
+
+	if err1 == nil && err2 == nil {
+		// http.StatusNoContent => 204 刪除成功 沒有回傳值
+		return serial.BuildResponse(http.StatusNoContent, "null", "刪除成功.")
 	} else {
-		// 500 伺服器有某些地方出問題了
+		// http.StatusInternamServerError => 500 伺服器有某些地方出問題了
 		return serial.BuildResponse(http.StatusInternalServerError, "null", "刪除失敗")
 	}
-
 }
