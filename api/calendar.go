@@ -40,7 +40,7 @@ func CalendarCreateEvent(ctx *gin.Context) {
 }
 
 func CalendarDeleteEvent(ctx *gin.Context) {
-	var servicer service.CalendarDelete
+	var servicer service.CalendarDeletePoster
 	//session := sessions.Default(ctx)
 
 	if err := ctx.ShouldBind(&servicer); err == nil {
