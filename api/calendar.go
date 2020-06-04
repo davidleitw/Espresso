@@ -39,7 +39,11 @@ func CalendarGetAllEvent(ctx *gin.Context) {
 }
 
 func CalendarGetEventInfo(ctx *gin.Context) {
-
+	var servicer service.GetEventInfoPoster
+	if err := ctx.ShouldBind(&servicer); err == nil {
+		res := servicer.CalendarGetEventInfo(ctx.Param("ID"))
+		ctx.JSON(serialization.GetResStatus(res).(int), res)
+	}
 }
 
 func CalendarUpdateEvent(ctx *gin.Context) {
