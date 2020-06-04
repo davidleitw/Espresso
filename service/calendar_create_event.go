@@ -4,32 +4,65 @@ import (
 	"Espresso/models"
 	serial "Espresso/serialization"
 	"net/http"
+
+	"github.com/rs/xid"
 )
 
 type CreateEventPoster struct {
 	ID      string `json:"User_ID"`
-	Ti      string `json: "Title"`
-	St      string `json: "StartTime"`
-	Et      string `json: "EndTime"`
-	Rt      string `json: "RemindTime"`
-	Context string `json: "Context"`
+	Title   string `json:"Title"`
+	Start   string `json:"StartTime"`
+	End     string `json:"EndTime"`
+	Remind  string `json:"RemindTime"`
+	Context string `json:"Context"`
+	Rurl    string `json:"ReferenceUrl"`
 }
 
 func (service *CreateEventPoster) CalendarCreateEvent() serial.Response {
-	event := &models.Event{
-		User_ID:    service.ID,
-		Title:      service.Ti,
-		StartTime:  service.St,
-		EndTime:    service.Et,
-		RemindTime: service.Rt,
-		Context:    service.Context,
+	// 需要的information
+	// 直接傳入資料庫的值StartTime, EndTime, Title, UserID, Context, ReferenceUrl
+	// 需要計算出來的值 RemindTime, CalendarID
+
+	// 建立一個唯一的Calendar ID
+	guid := xid.New()
+	email := models.GetFullEmail(service.ID)
+	rtime := models.GetResultTime(service.Remind, models.GetTimeValue(service.Start))
+
+	em := &models.EventMain{
+		CalendarID:   guid.String(),   // 唯一的calendarID
+		StartTime:    service.Start,   // 開始時間 以string存入database
+		EndTime:      service.End,     // 結束時間 以string形式存入database
+		Title:        service.Title,   // 標題
+		Context:      service.Context, // 內容
+		ReferenceUrl: service.Rurl,    // 參考網址
 	}
 
-	err := models.DB.Create(&event).Error
-
-	if err == nil {
-		return serial.BuildResponse(http.StatusOK, service.Ti, "新增事件成功")
+	ed := &models.EventDetail{
+		CalendarID: guid.String(),               // 唯一的calendarID
+		UserID:     email,                       // 用戶的電子信箱
+		Creator:    true,                        // 是否為此行程的創建人
+		RemindTime: models.GetTimeString(rtime), // 預計提醒時間
+		Accept:     true,                        // 是否接受邀約
 	}
-	return serial.BuildResponse(404, "null", "新增事件失敗")
+
+	// 避免重複查詢
+	var count int = 0
+	models.DB.Model(&models.EventMain{}).Where(
+		"user_id=? AND title=? AND start_time=?",
+		email, service.Title, service.Start,
+	).Count(&count)
+
+	err1 := models.DB.Create(&em).Error
+	err2 := models.DB.Create(&ed).Error
+
+	if err1 == nil && err2 == nil && count == 0 {
+		// http.StatusOk => 200 請求成功
+		return serial.BuildResponse(http.StatusOK, service.Title, "新增事件成功")
+	} else if count != 0 {
+		// http.StatusBadRequest => 400 請求的內容有誤
+		return serial.BuildResponse(http.StatusBadRequest, "null", "請勿重複新增事件")
+	}
+	// http.StatusInternamServerError => 500
+	return serial.BuildResponse(http.StatusInternalServerError, "null", "新增事件失敗")
 
 }

@@ -8,8 +8,13 @@ import (
 func main() {
 
 	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	// guid := xid.New()
+	// fmt.Println(guid.Time())
+	// fmt.Println(guid.String())
+	models.CreateEventMainTable(models.DB)
+	models.CreateEventDetailTable(models.DB)
 	//models.CreateUserTable(models.DB)
-	models.CreateEventTable(models.DB)
+	//models.CreateEventTable(models.DB)
 	// // 运行一定时间后退出
 	// st := time.Now()
 	// fmt.Println(st)

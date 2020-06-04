@@ -35,11 +35,7 @@ func CalendarCreateEvent(ctx *gin.Context) {
 	var servicer service.CreateEventPoster
 	if err := ctx.ShouldBind(&servicer); err == nil {
 		res := servicer.CalendarCreateEvent()
-		if serialization.GetResStatus(res) == 200 {
-			ctx.JSON(http.StatusOK, res)
-		} else {
-			ctx.JSON(404, res)
-		}
+		ctx.JSON(serialization.GetResStatus(res).(int), res)
 	}
 }
 
@@ -49,6 +45,6 @@ func CalendarDeleteEvent(ctx *gin.Context) {
 
 	if err := ctx.ShouldBind(&servicer); err == nil {
 		res := servicer.Delete(ctx.Param("ID"))
-        ctx.JSON(serialization.GetResStatus(res).(int), res)		
+		ctx.JSON(serialization.GetResStatus(res).(int), res)
 	}
 }

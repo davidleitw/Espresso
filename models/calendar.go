@@ -15,8 +15,33 @@ type Event struct {
 	Context    string `gorm:"size:450;"`
 }
 
+type EventMain struct {
+	CalendarID   string `gorm:"primary_key; not null; unique;"`
+	StartTime    string `gorm:"not null"`
+	EndTime      string `gorm:"not null"`
+	Title        string `gorm:"size:50;"`
+	Context      string
+	ReferenceUrl string
+}
+
+type EventDetail struct {
+	CalendarID string `gorm:"primary_key; not null; unique;"`
+	UserID     string `gorm:"not null"` // 使用者ID, 有可能是創建者 或者是獲邀的使用者
+	Creator    bool   `gorm:"not null"` // 判斷此userID是否為創建者, 預設為true
+	RemindTime string `gorm:"not null"` // 需要提醒的時間點
+	Accept     bool
+}
+
 func CreateEventTable(db *gorm.DB) {
 	db.CreateTable(&Event{})
+}
+
+func CreateEventMainTable(db *gorm.DB) {
+	db.CreateTable(&EventMain{})
+}
+
+func CreateEventDetailTable(db *gorm.DB) {
+	db.CreateTable(&EventDetail{})
 }
 
 func GetResultTime(t string, st time.Time) time.Time {
