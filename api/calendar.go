@@ -9,17 +9,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CalendarGetAllEvent(ctx *gin.Context) {
-	var EventSet []models.Event
-	// session := sessions.Default(ctx)
-	// userID := models.GetFullEmail(session.Get("loginuser").(string))
-	userID := models.GetFullEmail(ctx.Param("ID"))
-	err := models.DB.Where("user_id = ?", userID).Find(&EventSet).Error
+type EventItem struct {
+	Title     string
+	StartTime string
+}
 
-	if err == nil {
-		ctx.JSON(http.StatusOK, serialization.BuildResponse(http.StatusOK, EventSet, "Get all event information."))
+func CalendarGetAllEvent(ctx *gin.Context) {
+	var EventSet []EventItem
+	var EventMainSet []models.EventMain
+	email := models.GetFullEmail(ctx.Param("ID"))
+
+	err := models.DB.Where("user_id=?", email).Find(&EventMainSet).Error
+	for _, item := range EventMainSet {
+		item := EventItem{Title: item.Title, StartTime: item.StartTime}
+		EventSet = append(EventSet, item)
+	}
+
+	if err != nil {
+		// return 一個陣列 有著該使用者所有事件的title, start time.
+		ctx.JSON(
+			http.StatusOK,
+			serialization.BuildResponse(http.StatusOK, EventSet, "獲得所有資料"))
 	} else {
-		ctx.JSON(404, serialization.BuildResponse(404, "null", "獲得全部資料失敗"))
+		// 不明原因無法查詢 也許是因為找不到該使用者
+		ctx.JSON(
+			http.StatusInternalServerError,
+			serialization.BuildResponse(http.StatusInternalServerError, "null", "獲得資料失敗"))
 	}
 }
 
