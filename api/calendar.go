@@ -19,8 +19,9 @@ type EventItem struct {
 // @version 1.0
 // @accept application/json
 // @produce application/json
-// @Router /api/calendar/:ID/getAllEvent [post]
-// @Success 200 {object} serialization.Response
+// @Router /api/calendar/{ID}/getAllEvent [post]
+// @Success 200 {object} serialization.Response{}
+// @Success 500 {object} serialization.Response
 func CalendarGetAllEvent(ctx *gin.Context) {
 	var EventSet []EventItem
 	var EventMainSet []models.EventMain

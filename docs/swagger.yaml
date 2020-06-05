@@ -13,6 +13,24 @@ info:
   title: Espresso Example API File
   version: 0.0.1
 paths:
+  /api/calendar/{ID}/getAllEvent:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serialization.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serialization.Response'
+      summary: 登入時該用戶所有資料的概要
+      tags:
+      - Calendar
   /api/user/userLogin:
     post:
       consumes:
