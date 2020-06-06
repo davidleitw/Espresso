@@ -52,7 +52,7 @@ func (service *CreateEventPoster) CalendarCreateEvent() serial.Response {
 	// 避免重複查詢
 	var count int = 0
 	models.DB.Model(&models.EventDetail{}).Where(
-		"user_id=? AND title=? AND start_time=?",
+		"user_id=? AND title=? AND remind_time=?",
 		email, service.Title, rTime,
 	).Count(&count)
 
