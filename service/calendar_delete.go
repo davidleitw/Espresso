@@ -20,8 +20,8 @@ func (service *CalendarDeletePoster) Delete(userID string) serial.Response {
 	var deldetail models.EventDetail
 
 	email := models.GetFullEmail(userID)
-	rTime := models.GetResultTime(service.RemindTime, models.GetTimeValue(service.StartTime))
-
+	//rTime := models.GetResultTime(service.RemindTime, models.GetTimeValue(service.StartTime))
+	rTime := models.GetRemindTime(service.StartTime, service.RemindTime)
 	// models.DB.Where(
 	// 	"user_id=? AND title=? AND start_time=?",
 	// 	email, service.Title, service.StartTime,
