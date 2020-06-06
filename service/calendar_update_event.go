@@ -7,7 +7,6 @@ import (
 )
 
 type UpdateEventPoster struct {
-	ID      string `json:"User_ID"`
 	Title   string `json:"Title"`
 	Start   string `json:"StartTime"`
 	End     string `json:"EndTime"`
@@ -16,20 +15,21 @@ type UpdateEventPoster struct {
 	Rurl    string `json:"ReferenceUrl"`
 }
 
-func (service *UpdateEventPoster) CalendarUpdateEvent() serial.Response {
-	email := models.GetFullEmail(service.ID)
-	rtime := models.GetResultTime(service.Remind, models.GetTimeValue(service.Start))
+func (service *UpdateEventPoster) CalendarUpdateEvent(userID string) serial.Response {
+	var Info models.EventDetail
 	var Em models.EventMain
 	var Ed models.EventDetail
 
-	models.DB.Where(
-		"user_id=? AND title=? AND start_time=?",
-		email, service.Title, service.Start,
-	).First(&Em)
-	models.DB.Where(
-		"user_id=? AND title=? AND start_time=?",
-		email, service.Title, service.Start,
-	).First(&Ed)
+	email := models.GetFullEmail(userID)
+	remindtime := models.GetRemindTime(service.Start, service.Remind)
+
+	models.DB.Model(&models.EventDetail{}).Where(
+		"user_id=? AND title=? AND remind_time=?",
+		email, service.Title, remindtime,
+	).First(&Info)
+
+	models.DB.Where(&models.EventMain{}).Where("calendar_id=?", Info.CalendarID).First(&Em)
+	models.DB.Where(&models.EventDetail{}).Where("calendar_id=?", Info.CalendarID).First(&Ed)
 
 	Em.StartTime = service.Start
 	Em.EndTime = service.End
@@ -37,8 +37,8 @@ func (service *UpdateEventPoster) CalendarUpdateEvent() serial.Response {
 	Em.Context = service.Context
 	Em.ReferenceUrl = service.Rurl
 
-	Ed.UserID = models.GetFullEmail(service.ID)
-	Ed.RemindTime = models.GetTimeString(rtime)
+	Ed.UserID = email
+	Ed.RemindTime = remindtime
 
 	err1 := models.DB.Save(&Em).Error
 	err2 := models.DB.Save(&Ed).Error

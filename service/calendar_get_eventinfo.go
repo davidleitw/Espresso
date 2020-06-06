@@ -7,8 +7,9 @@ import (
 )
 
 type GetEventInfoPoster struct {
-	Title string `json: "title"`
-	Start string `json: "starttime"`
+	Title  string `json: "title"`
+	Start  string `json: "start"`
+	Remind string `json: "remind"`
 }
 
 type EventInfo struct {
@@ -21,19 +22,29 @@ type EventInfo struct {
 }
 
 func (service *GetEventInfoPoster) CalendarGetEventInfo(userID string) serial.Response {
-	email := models.GetFullEmail(userID)
+	var Info models.EventDetail
 	var Em models.EventMain
 	var Ed models.EventDetail
 
-	// 根據userid, title, start time 取得唯一的事件資料
-	err1 := models.DB.Where(
-		"user_id=? AND title=? AND start_time=?",
-		email, service.Title, service.Start,
-	).First(&Em).Error
-	err2 := models.DB.Where(
-		"user_id=? AND title=? AND start_time=?",
-		email, service.Title, service.Start,
-	).First(&Ed).Error
+	email := models.GetFullEmail(userID)
+	remindtime := models.GetRemindTime(service.Start, service.Remind)
+
+	models.DB.Model(&models.EventDetail{}).Where(
+		"user_id=? AND title=? AND remind_time=?",
+		email, service.Title, remindtime,
+	).First(&Info)
+
+	err1 := models.DB.Where(&models.EventMain{}).Where("calendar_id=?", Info.CalendarID).First(&Em).Error
+	err2 := models.DB.Where(&models.EventDetail{}).Where("calendar_id=?", Info.CalendarID).First(&Ed).Error
+	// // 根據userid, title, start time 取得唯一的事件資料
+	// err1 := models.DB.Where(
+	// 	"user_id=? AND title=? AND start_time=?",
+	// 	email, service.Title, service.Start,
+	// ).First(&Em).Error
+	// err2 := models.DB.Where(
+	// 	"user_id=? AND title=? AND start_time=?",
+	// 	email, service.Title, service.Start,
+	// ).First(&Ed).Error
 
 	if err1 == nil && err2 == nil {
 		// http.StatusOk => 200

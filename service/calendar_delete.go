@@ -7,27 +7,32 @@ import (
 )
 
 type CalendarDeletePoster struct {
-	Title     string `json:"title"`
-	StartTime string `json:"start_time"`
+	Title      string `json:"title"`
+	StartTime  string `json:"start_time"`
+	RemindTime string `json:"remind_time"`
 }
 
 func (service *CalendarDeletePoster) Delete(userID string) serial.Response {
 	// 刪除 先藉由 UserID, title, starttime 找到唯一的事件
 	// 拿到ID之後刪除兩個表中有同ID的事件
-	var emain models.EventMain
-	//var edetail models.EventDetail
-
+	var main models.EventDetail
 	var delmain models.EventMain
 	var deldetail models.EventDetail
 
 	email := models.GetFullEmail(userID)
+	rTime := models.GetResultTime(service.RemindTime, models.GetTimeValue(service.StartTime))
 
-	models.DB.Where(
-		"user_id=? AND title=? AND start_time=?",
-		email, service.Title, service.StartTime,
-	).First(&email)
+	// models.DB.Where(
+	// 	"user_id=? AND title=? AND start_time=?",
+	// 	email, service.Title, service.StartTime,
+	// ).First(&email)
 
-	calendarID := emain.CalendarID
+	models.DB.Model(&models.EventDetail{}).Where(
+		"user_id=? AND title=? AND remind_time=?",
+		email, service.Title, rTime,
+	).First(&main)
+
+	calendarID := main.CalendarID
 	err1 := models.DB.Where("calendar_id=?", calendarID).Delete(&delmain).Error
 	err2 := models.DB.Where("calendar_id=?", calendarID).Delete(&deldetail).Error
 

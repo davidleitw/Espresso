@@ -57,7 +57,7 @@ func CalendarGetEventInfo(ctx *gin.Context) {
 func CalendarUpdateEvent(ctx *gin.Context) {
 	var servicer service.UpdateEventPoster
 	if err := ctx.ShouldBind(&servicer); err == nil {
-		res := servicer.CalendarUpdateEvent()
+		res := servicer.CalendarUpdateEvent(ctx.Param("ID"))
 		ctx.JSON(serialization.GetResStatus(res).(int), res)
 	}
 }

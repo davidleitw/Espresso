@@ -47,7 +47,7 @@ type Event struct {
 
 type EventMain struct {
 	CalendarID   string `gorm:"primary_key; not null; unique;"`
-	CreateTime   string `gorm not null`
+	CreateTime   string
 	StartTime    string `gorm:"not null"`
 	EndTime      string `gorm:"not null"`
 	Title        string `gorm:"size:50;"`
@@ -58,6 +58,7 @@ type EventMain struct {
 type EventDetail struct {
 	CalendarID string `gorm:"primary_key; not null; unique;"`
 	UserID     string `gorm:"not null"` // 使用者ID, 有可能是創建者 或者是獲邀的使用者
+	Title      string `gorm:"not null"` // 行程標題
 	Creator    bool   `gorm:"not null"` // 判斷此userID是否為創建者, 預設為true
 	RemindTime string `gorm:"not null"` // 需要提醒的時間點
 	Accept     bool
@@ -89,4 +90,11 @@ func GetTimeValue(t string) time.Time {
 // change time.Time to string
 func GetTimeString(t time.Time) string {
 	return t.Format("2006-01-02 15:04:05")
+}
+
+func GetRemindTime(start string, remind string) string {
+	s := GetTimeValue(start)
+	t1, _ := time.ParseDuration(remind)
+	s = s.Add(t1)
+	return s.Format("2006-01-02 15:04:05")
 }

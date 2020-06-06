@@ -4,6 +4,7 @@ import (
 	"Espresso/models"
 	serial "Espresso/serialization"
 	"net/http"
+	"time"
 
 	"github.com/rs/xid"
 )
@@ -26,30 +27,33 @@ func (service *CreateEventPoster) CalendarCreateEvent() serial.Response {
 	// 建立一個唯一的Calendar ID
 	guid := xid.New()
 	email := models.GetFullEmail(service.ID)
-	rtime := models.GetResultTime(service.Remind, models.GetTimeValue(service.Start))
+	rTime := models.GetTimeString(models.GetResultTime(service.Remind, models.GetTimeValue(service.Start)))
+	createTime := time.Now()
 
 	em := &models.EventMain{
-		CalendarID:   guid.String(),   // 唯一的calendarID
-		StartTime:    service.Start,   // 開始時間 以string存入database
-		EndTime:      service.End,     // 結束時間 以string形式存入database
-		Title:        service.Title,   // 標題
-		Context:      service.Context, // 內容
-		ReferenceUrl: service.Rurl,    // 參考網址
+		CalendarID:   guid.String(),                    // 唯一的calendarID
+		CreateTime:   models.GetTimeString(createTime), // 開始時間以字串形式
+		StartTime:    service.Start,                    // 開始時間 以string存入database
+		EndTime:      service.End,                      // 結束時間 以string形式存入database
+		Title:        service.Title,                    // 標題
+		Context:      service.Context,                  // 內容
+		ReferenceUrl: service.Rurl,                     // 參考網址
 	}
 
 	ed := &models.EventDetail{
-		CalendarID: guid.String(),               // 唯一的calendarID
-		UserID:     email,                       // 用戶的電子信箱
-		Creator:    true,                        // 是否為此行程的創建人
-		RemindTime: models.GetTimeString(rtime), // 預計提醒時間
-		Accept:     true,                        // 是否接受邀約
+		CalendarID: guid.String(), // 唯一的calendarID
+		UserID:     email,         // 用戶的電子信箱
+		Title:      service.Title, // 標題
+		Creator:    true,          // 是否為此行程的創建人
+		RemindTime: rTime,         // 預計提醒時間
+		Accept:     true,          // 是否接受邀約
 	}
 
 	// 避免重複查詢
 	var count int = 0
-	models.DB.Model(&models.EventMain{}).Where(
+	models.DB.Model(&models.EventDetail{}).Where(
 		"user_id=? AND title=? AND start_time=?",
-		email, service.Title, service.Start,
+		email, service.Title, rTime,
 	).Count(&count)
 
 	err1 := models.DB.Create(&em).Error
