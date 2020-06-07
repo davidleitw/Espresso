@@ -28,7 +28,7 @@ func CalendarGetAllEvent(ctx *gin.Context) {
 	var EventDetailSet []models.EventDetail
 	email := models.GetFullEmail(ctx.Param("ID"))
 
-	err := models.DB.Model(&models.EventDetail{}).Where("calendar_id=?", email).Find(&EventDetailSet).Error
+	err := models.DB.Model(&models.EventDetail{}).Where("user_id=?", email).Find(&EventDetailSet).Error
 	for _, item := range EventDetailSet {
 		cID := item.CalendarID
 		models.DB.Model(&models.EventMain{}).Where("calendar_id=?", cID).First(&EventInfo)
