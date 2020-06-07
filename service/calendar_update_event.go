@@ -44,6 +44,7 @@ func (service *UpdateEventPoster) CalendarUpdateEvent(userID string) serial.Resp
 	Em.ReferenceUrl = service.Rurl
 
 	Ed.UserID = email
+	Ed.Title = service.Title
 	Ed.RemindTime = rt
 
 	err1 := models.DB.Save(&Em).Error
