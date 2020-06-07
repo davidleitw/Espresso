@@ -24,12 +24,15 @@ type EventItem struct {
 // @Success 500 {object} serialization.Response
 func CalendarGetAllEvent(ctx *gin.Context) {
 	var EventSet []EventItem
-	var EventMainSet []models.EventMain
+	var EventInfo models.EventMain
+	var EventDetailSet []models.EventDetail
 	email := models.GetFullEmail(ctx.Param("ID"))
 
-	err := models.DB.Where("user_id=?", email).Find(&EventMainSet).Error
-	for _, item := range EventMainSet {
-		item := EventItem{Title: item.Title, StartTime: item.StartTime}
+	err := models.DB.Model(&models.EventDetail{}).Where("calendar_id=?", email).Find(&EventDetailSet).Error
+	for _, item := range EventDetailSet {
+		cID := item.CalendarID
+		models.DB.Model(&models.EventMain{}).Where("calendar_id=?", cID).First(&EventInfo)
+		item := EventItem{Title: EventInfo.Title, StartTime: EventInfo.StartTime}
 		EventSet = append(EventSet, item)
 	}
 

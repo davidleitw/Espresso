@@ -137,19 +137,12 @@ func AuthSessionMiddle() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		login := sessions.Default(ctx).Get("islogin")
 		log.Println(login)
-		//username := sessions.Default(ctx).Get("loginuser")
-		//log.Println("username of this http request is ", username)
-		//_, login := ctx.Request.Cookie("islogin")
 		if login == nil {
 			// http.StatusUnauthorized => 400 未認證，可能需要登入或 Token
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"status":  http.StatusUnauthorized,
 				"message": "Not login",
 			})
-			// ctx.JSON(http.StatusUnauthorized, serialization.BuildResponse(
-			// 	http.StatusUnauthorized,
-			// 	"null",
-			// 	"Not login, please login!"))
 			ctx.Abort()
 			//return
 		}
