@@ -2,32 +2,21 @@ package main
 
 import (
 	"Espresso/models"
+	"fmt"
 	"time"
 )
 
 func main() {
 
-	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	// guid := xid.New()
-	// fmt.Println(guid.Time())
-	// fmt.Println(guid.String())
-	models.CreateEventMainTable(models.DB)
-	models.CreateEventDetailTable(models.DB)
+	// models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	// models.CreateEventMainTable(models.DB)
+	// models.CreateEventDetailTable(models.DB)
 	//models.CreateUserTable(models.DB)
 	//models.CreateEventTable(models.DB)
-	// // 运行一定时间后退出
-	// st := time.Now()
-	// fmt.Println(st)
-
-	// a, _ := time.ParseDuration("1m")
-	// st = st.Add(a)
-	// fmt.Println(st)
-	// fmt.Println(st.String())
-	// fmt.Println(st.Format("2006-01-02 15:04:05"))
-	// fmt.Printf("type of st is %T\n", st.Format("2006-01-02 15:04:05"))
-
-	// nt, _ := time.Parse("2006-01-02 15:04:05", st.Format("2006-01-02 15:04:05"))
-	// fmt.Println(nt)
+	start := "2020-01-03 17:24:15"
+	rem := "-15m"
+	r := models.GetRemindTime(start, rem)
+	fmt.Println(r)
 }
 
 func GetTimeValue(t string) time.Time {
