@@ -10,7 +10,6 @@ import (
 )
 
 type CreateEventPoster struct {
-	ID      string `json:"User_ID"`
 	Title   string `json:"Title"`
 	Start   string `json:"StartTime"`
 	End     string `json:"EndTime"`
@@ -19,14 +18,14 @@ type CreateEventPoster struct {
 	Rurl    string `json:"ReferenceUrl"`
 }
 
-func (service *CreateEventPoster) CalendarCreateEvent() serial.Response {
+func (service *CreateEventPoster) CalendarCreateEvent(userID string) serial.Response {
 	// 需要的information
 	// 直接傳入資料庫的值StartTime, EndTime, Title, UserID, Context, ReferenceUrl
 	// 需要計算出來的值 RemindTime, CalendarID
 
 	// 建立一個唯一的Calendar ID
 	guid := xid.New()
-	email := models.GetFullEmail(service.ID)
+	email := models.GetFullEmail(userID)
 	rTime := models.GetTimeString(models.GetResultTime(service.Remind, models.GetTimeValue(service.Start)))
 	createTime := time.Now()
 

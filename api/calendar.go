@@ -24,19 +24,19 @@ type EventItem struct {
 // @Success 500 {object} serialization.Response
 func CalendarGetAllEvent(ctx *gin.Context) {
 	var EventSet []EventItem
-	var EventInfo models.EventMain
 	var EventDetailSet []models.EventDetail
 	email := models.GetFullEmail(ctx.Param("ID"))
 
 	err := models.DB.Model(&models.EventDetail{}).Where("user_id=?", email).Find(&EventDetailSet).Error
 	for _, item := range EventDetailSet {
 		cID := item.CalendarID
+		var EventInfo models.EventMain
 		models.DB.Model(&models.EventMain{}).Where("calendar_id=?", cID).First(&EventInfo)
 		item := EventItem{Title: EventInfo.Title, StartTime: EventInfo.StartTime}
 		EventSet = append(EventSet, item)
 	}
 
-	if err != nil {
+	if err == nil {
 		// return 一個陣列 有著該使用者所有事件的title, start time.
 		ctx.JSON(
 			http.StatusOK,
@@ -68,7 +68,7 @@ func CalendarUpdateEvent(ctx *gin.Context) {
 func CalendarCreateEvent(ctx *gin.Context) {
 	var servicer service.CreateEventPoster
 	if err := ctx.ShouldBind(&servicer); err == nil {
-		res := servicer.CalendarCreateEvent()
+		res := servicer.CalendarCreateEvent(ctx.Param("ID"))
 		ctx.JSON(serialization.GetResStatus(res).(int), res)
 	}
 }
