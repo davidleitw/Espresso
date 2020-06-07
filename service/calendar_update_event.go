@@ -7,12 +7,15 @@ import (
 )
 
 type UpdateEventPoster struct {
-	Title   string `json:"Title"`
-	Start   string `json:"StartTime"`
-	End     string `json:"EndTime"`
-	Remind  string `json:"RemindTime"`
-	Context string `json:"Context"`
-	Rurl    string `json:"ReferenceUrl"`
+	OldTitle  string `json:"OldTitle"`
+	OldStart  string `json:"OldStart"`
+	OldRemind string `json:"OldRemind`
+	Title     string `json:"Title"`
+	Start     string `json:"StartTime"`
+	End       string `json:"EndTime"`
+	Remind    string `json:"RemindTime"`
+	Context   string `json:"Context"`
+	Rurl      string `json:"ReferenceUrl"`
 }
 
 func (service *UpdateEventPoster) CalendarUpdateEvent(userID string) serial.Response {
@@ -21,15 +24,18 @@ func (service *UpdateEventPoster) CalendarUpdateEvent(userID string) serial.Resp
 	var Ed models.EventDetail
 
 	email := models.GetFullEmail(userID)
-	remindtime := models.GetRemindTime(service.Start, service.Remind)
+	remindtime := models.GetRemindTime(service.OldStart, service.OldRemind)
+	//remindtime := models.GetRemindTime(service.Start, service.Remind)
 
 	models.DB.Model(&models.EventDetail{}).Where(
 		"user_id=? AND title=? AND remind_time=?",
-		email, service.Title, remindtime,
+		email, service.OldTitle, remindtime,
 	).First(&Info)
 
 	models.DB.Where(&models.EventMain{}).Where("calendar_id=?", Info.CalendarID).First(&Em)
 	models.DB.Where(&models.EventDetail{}).Where("calendar_id=?", Info.CalendarID).First(&Ed)
+
+	rt := models.GetRemindTime(service.Start, service.Remind)
 
 	Em.StartTime = service.Start
 	Em.EndTime = service.End
@@ -38,7 +44,7 @@ func (service *UpdateEventPoster) CalendarUpdateEvent(userID string) serial.Resp
 	Em.ReferenceUrl = service.Rurl
 
 	Ed.UserID = email
-	Ed.RemindTime = remindtime
+	Ed.RemindTime = rt
 
 	err1 := models.DB.Save(&Em).Error
 	err2 := models.DB.Save(&Ed).Error
