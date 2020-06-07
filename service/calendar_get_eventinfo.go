@@ -7,9 +7,9 @@ import (
 )
 
 type GetEventInfoPoster struct {
-	Title      string `json: "title"`
-	StartTime  string `json: "start_time"`
-	RemindTime string `json: "remind_time"`
+	Title      string `json:"title"`
+	StartTime  string `json:"start_time"`
+	RemindTime string `json:"remind_time"`
 }
 
 type EventInfo struct {
