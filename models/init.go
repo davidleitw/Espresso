@@ -13,6 +13,7 @@ var DB *gorm.DB
 
 func CheckError(err error) {
 	if err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
 }
@@ -33,5 +34,5 @@ func ConnectDataBase(dbname string) {
 }
 
 func migration() {
-	DB.Set("gorm:table_options", "charset=utf8mb4").AutoMigrate(&Users{})
+	DB.Set("gorm:table_options", "charset=utf8mb4").AutoMigrate(&Users{},&EventMain{}, &EventDetail{})
 }

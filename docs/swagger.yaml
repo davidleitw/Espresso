@@ -1,6 +1,7 @@
 basePath: /api/
 definitions:
   serialization.Response:
+    additionalProperties: true
     type: object
 host: http://espresso.nctu.me:8080/
 info:
@@ -13,8 +14,75 @@ info:
   title: Espresso Example API File
   version: 0.0.1
 paths:
-  /api/calendar/{ID}/getAllEvent:
+  /api/calendar/{ID}/createNewEvent:
     post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 填入事件標題
+        in: header
+        name: Title
+        required: true
+        type: string
+      - description: 填入事件開始時間
+        in: header
+        name: StartTime
+        required: true
+        type: string
+      - description: 填入事件的結束時間
+        in: header
+        name: EndTime
+        required: true
+        type: string
+      - description: 填入事件想要提前幾分鐘提醒 以-3h這種形式
+        in: header
+        name: RemindTime
+        required: true
+        type: string
+      - description: 填入事件內容
+        in: header
+        name: Context
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+        "400": {}
+        "500": {}
+      summary: 創建事件
+      tags:
+      - Calendar
+  /api/calendar/{ID}/deleteEvent:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 填入想要刪除事件的標題
+        in: header
+        name: title
+        required: true
+        type: string
+      - description: 填入想要刪除事件的開始時間
+        in: header
+        name: start_time
+        required: true
+        type: string
+      - description: 填入想要刪除事件需要提前幾分鐘提醒 以-3h這種形式填入(創建事件要填的那個寫法)
+        in: header
+        name: remind_time
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204": {}
+        "500": {}
+      summary: 刪除指定的事件
+      tags:
+      - Calendar
+  /api/calendar/{ID}/getAllEvent:
+    get:
       consumes:
       - application/json
       produces:
@@ -29,6 +97,92 @@ paths:
           schema:
             $ref: '#/definitions/serialization.Response'
       summary: 登入時該用戶所有資料的概要
+      tags:
+      - Calendar
+  /api/calendar/{ID}/getEventInfo:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 填入想要查詢事件的標題
+        in: header
+        name: title
+        required: true
+        type: string
+      - description: 填入想要查詢事件的開始時間
+        in: header
+        name: start_time
+        required: true
+        type: string
+      - description: 填入想要查詢事件需要提前幾分鐘提醒 以-3h這種形式填入(創建事件要填的那個寫法)
+        in: header
+        name: remind_time
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+        "500": {}
+      summary: 獲得某個特定事件的資料
+      tags:
+      - Calendar
+  /api/calendar/{ID}/updateEvent:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 填入修改前的事件標題
+        in: header
+        name: OldTitle
+        required: true
+        type: string
+      - description: 填入修改前的開始時間
+        in: header
+        name: OldStart
+        required: true
+        type: string
+      - description: 填入修改前的欲提醒時間
+        in: header
+        name: OldRemind
+        required: true
+        type: string
+      - description: 填入修改後的新標題
+        in: header
+        name: Title
+        required: true
+        type: string
+      - description: 填入修改後的新開始時間
+        in: header
+        name: StartTime
+        required: true
+        type: string
+      - description: 填入修改後的新結束時間
+        in: header
+        name: EndTime
+        required: true
+        type: string
+      - description: 填入修改後的新提醒時間 以-3h這種形式
+        in: header
+        name: RemindTime
+        required: true
+        type: string
+      - description: 填入修改後的事件內容
+        in: header
+        name: Context
+        required: true
+        type: string
+      - description: 填入修改後的參考網址
+        in: header
+        name: ReferenceUrl
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204": {}
+        "500": {}
+      summary: 更新某個事件的內容
       tags:
       - Calendar
   /api/user/userLogin:

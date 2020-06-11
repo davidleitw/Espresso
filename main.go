@@ -16,8 +16,10 @@ import (
 // @BasePath /api/
 func main() {
 	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:davidleitw@(davidleitw)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	defer models.DB.Close()
 
 	r := server.NewRouter()
 	r.Run(":3000")
+	//
 }

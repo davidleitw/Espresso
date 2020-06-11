@@ -30,8 +30,105 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/calendar/{ID}/getAllEvent": {
+        "/api/calendar/{ID}/createNewEvent": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Calendar"
+                ],
+                "summary": "創建事件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "填入事件標題",
+                        "name": "Title",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入事件開始時間",
+                        "name": "StartTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入事件的結束時間",
+                        "name": "EndTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入事件想要提前幾分鐘提醒 以-3h這種形式",
+                        "name": "RemindTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入事件內容",
+                        "name": "Context",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "400": {},
+                    "500": {}
+                }
+            }
+        },
+        "/api/calendar/{ID}/deleteEvent": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Calendar"
+                ],
+                "summary": "刪除指定的事件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "填入想要刪除事件的標題",
+                        "name": "title",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入想要刪除事件的開始時間",
+                        "name": "start_time",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入想要刪除事件需要提前幾分鐘提醒 以-3h這種形式填入(創建事件要填的那個寫法)",
+                        "name": "remind_time",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {},
+                    "500": {}
+                }
+            }
+        },
+        "/api/calendar/{ID}/getAllEvent": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],
@@ -55,6 +152,130 @@ var doc = `{
                             "$ref": "#/definitions/serialization.Response"
                         }
                     }
+                }
+            }
+        },
+        "/api/calendar/{ID}/getEventInfo": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Calendar"
+                ],
+                "summary": "獲得某個特定事件的資料",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "填入想要查詢事件的標題",
+                        "name": "title",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入想要查詢事件的開始時間",
+                        "name": "start_time",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入想要查詢事件需要提前幾分鐘提醒 以-3h這種形式填入(創建事件要填的那個寫法)",
+                        "name": "remind_time",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "500": {}
+                }
+            }
+        },
+        "/api/calendar/{ID}/updateEvent": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Calendar"
+                ],
+                "summary": "更新某個事件的內容",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "填入修改前的事件標題",
+                        "name": "OldTitle",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改前的開始時間",
+                        "name": "OldStart",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改前的欲提醒時間",
+                        "name": "OldRemind",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改後的新標題",
+                        "name": "Title",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改後的新開始時間",
+                        "name": "StartTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改後的新結束時間",
+                        "name": "EndTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改後的新提醒時間 以-3h這種形式",
+                        "name": "RemindTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改後的事件內容",
+                        "name": "Context",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "填入修改後的參考網址",
+                        "name": "ReferenceUrl",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {},
+                    "500": {}
                 }
             }
         },
@@ -232,7 +453,8 @@ var doc = `{
     },
     "definitions": {
         "serialization.Response": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": true
         }
     }
 }`
