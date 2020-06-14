@@ -4,6 +4,7 @@ import (
 	_ "Espresso/docs"
 	"Espresso/models"
 	"Espresso/server"
+	"fmt"
 )
 
 // @title Espresso Example API File
@@ -18,8 +19,7 @@ func main() {
 	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
 	//models.ConnectDataBase("root:davidleitw@(davidleitw)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	defer models.DB.Close()
-
+	fmt.Println("15")
 	r := server.NewRouter()
 	r.Run(":3000")
-	//
 }

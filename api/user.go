@@ -25,7 +25,7 @@ import (
 // @Failure 404 {object} serialization.Response
 func UserRegister(ctx *gin.Context) {
 	var servicer service.UserRegisterCatcher
-	if err := ctx.ShouldBind(&servicer); err == nil {
+	if err := ctx.BindJSON(&servicer); err == nil {
 		if res := servicer.Register(); serialization.GetResStatus(res) != 200 {
 			// http code 403 => Forbidden 用戶端無訪問權限
 			ctx.JSON(http.StatusForbidden, res)
@@ -52,7 +52,7 @@ func UserRegister(ctx *gin.Context) {
 // @Failure 404 {object} serialization.Response{}
 func UserLogin(ctx *gin.Context) {
 	var servicer service.UserLoginCatcher
-	if err := ctx.ShouldBind(&servicer); err == nil {
+	if err := ctx.BindJSON(&servicer); err == nil {
 		// json get successfully
 		if res := servicer.Login(); serialization.GetResStatus(res) != 200 {
 			// 收到json, 但是登入失敗

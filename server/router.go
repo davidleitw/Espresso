@@ -32,6 +32,7 @@ func setCors() gin.HandlerFunc {
 }
 
 func NewRouter() *gin.Engine {
+	gin.SetMode(gin.DebugMode)
 	server := gin.Default()
 
 	//store := cookie.NewStore([]byte("loginuser"), []byte("islogin"))
