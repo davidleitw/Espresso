@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -19,7 +19,7 @@ func CheckError(err error) {
 }
 
 func ConnectDataBase(dbname string) {
-	db, err := gorm.Open("postgres", dbname)
+	db, err := gorm.Open("mysql", dbname)
 	CheckError(err)
 	fmt.Println("Successfully connect database.")
 

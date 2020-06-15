@@ -26,8 +26,8 @@ type updateEvent struct {
 }
 
 func Test_CalendarUpdateEvent(t *testing.T) {
-	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	store := cookie.NewStore([]byte("secret"))
 	server := server.NewRouter()
 	server.Use(SetCors())
@@ -39,7 +39,7 @@ func Test_CalendarUpdateEvent(t *testing.T) {
 		Ps string `json:"password"`
 	}{
 		Ac: "a001@gmail.com",
-		Ps: "a001",
+		Ps: "a001a001",
 	}
 	requests := []struct {
 		Info   updateEvent
@@ -47,24 +47,10 @@ func Test_CalendarUpdateEvent(t *testing.T) {
 	}{
 		{
 			Info: updateEvent{
-				OldTitle:  "0123icSdTO",
-				OldStart:  "2014-01-21 12:45:32",
+				OldTitle:  "TestEvent",
+				OldStart:  "2019-04-08 12:45:32",
 				OldRemind: "-3m",
-				Title:     "0123icSdTO",
-				Start:     "2014-01-21 12:45:32",
-				End:       "2018-07-07 05-24-40",
-				Remind:    "-3m",
-				Context:   RandString(25) + "Test",
-				Rurl:      RandString(10),
-			},
-			Status: 204,
-		},
-		{
-			Info: updateEvent{
-				OldTitle:  "0123XVlBzg",
-				OldStart:  "2014-01-21 12:45:32",
-				OldRemind: "-3m",
-				Title:     "0123icSdTO",
+				Title:     "TestEvent_update",
 				Start:     "2014-01-21 12:45:32",
 				End:       "2018-07-07 05-24-40",
 				Remind:    "-3m",

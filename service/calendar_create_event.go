@@ -55,15 +55,17 @@ func (service *CreateEventPoster) CalendarCreateEvent(userID string) serial.Resp
 		email, service.Title, rTime,
 	).Count(&count)
 
+	if count != 0 {
+		// http.StatusBadRequest => 400 請求的內容有誤
+		return serial.BuildResponse(http.StatusBadRequest, "null", "請勿重複新增事件")
+	}
+
 	err1 := models.DB.Create(&em).Error
 	err2 := models.DB.Create(&ed).Error
 
 	if err1 == nil && err2 == nil && count == 0 {
 		// http.StatusOk => 200 請求成功
 		return serial.BuildResponse(http.StatusOK, service.Title, "新增事件成功")
-	} else if count != 0 {
-		// http.StatusBadRequest => 400 請求的內容有誤
-		return serial.BuildResponse(http.StatusBadRequest, "null", "請勿重複新增事件")
 	}
 	// http.StatusInternamServerError => 500
 	return serial.BuildResponse(http.StatusInternalServerError, "null", "新增事件失敗")

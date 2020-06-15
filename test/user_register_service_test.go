@@ -21,8 +21,8 @@ type register struct {
 }
 
 func TestUserRegisterCatcher_Register(t *testing.T) {
-	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	server := server.NewRouter()
 	defer models.DB.Close()
 
@@ -31,6 +31,18 @@ func TestUserRegisterCatcher_Register(t *testing.T) {
 		Status int
 	}{
 		{
+			// super user
+			Req: register{
+				Mail: "a001@gmail.com",
+				Name: "a001",
+				Pas1: "a001a001",
+				Pas2: "a001a001",
+				Rid:  "00000000",
+			},
+			Status: 200,
+		},
+		{
+			// 理論上應該也要是可以的
 			Req: register{
 				Mail: "a8763" + RandString(4) + "@gmail.com",
 				Name: "Kirito" + RandString(2),
@@ -48,9 +60,10 @@ func TestUserRegisterCatcher_Register(t *testing.T) {
 				Pas2: "20221106",
 				Rid:  "00000000",
 			},
-			Status: 403,
+			Status: 200,
 		},
 		{
+			// 密碼小於八碼
 			Req: register{
 				Mail: "a004@gmail.com",
 				Name: "BadRequest",
@@ -61,6 +74,7 @@ func TestUserRegisterCatcher_Register(t *testing.T) {
 			Status: 403,
 		},
 		{
+			// 兩次輸入密碼不同
 			Req: register{
 				Mail: "a005@gmail.com",
 				Name: "Pas2Error",

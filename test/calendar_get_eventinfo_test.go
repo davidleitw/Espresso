@@ -21,8 +21,8 @@ type eventInfo struct {
 }
 
 func Test_CalendarGetInfo(t *testing.T) {
-	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	store := cookie.NewStore([]byte("secret"))
 	server := server.NewRouter()
 	server.Use(SetCors())
@@ -34,7 +34,7 @@ func Test_CalendarGetInfo(t *testing.T) {
 		Ps string `json:"password"`
 	}{
 		Ac: "a001@gmail.com",
-		Ps: "a001",
+		Ps: "a001a001",
 	}
 
 	requests := []struct {
@@ -42,14 +42,16 @@ func Test_CalendarGetInfo(t *testing.T) {
 		Status int
 	}{
 		{
+			// 一開始create的第一件事件 拿來查詢data
 			Info: eventInfo{
-				Title:      "0123icSdTO",
-				StartTime:  "2014-01-21 12:45:32",
+				Title:      "TestEvent",
+				StartTime:  "2019-04-08 12:45:32",
 				RemindTime: "-3m",
 			},
 			Status: 200,
 		},
 		{
+			// 不存在的資料
 			Info: eventInfo{
 				Title:      "Not exist event test",
 				StartTime:  "2017-08-04 14:28:36",

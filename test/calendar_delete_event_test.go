@@ -21,8 +21,8 @@ type delevent struct {
 }
 
 func Test_CalendarDeleteEvent(t *testing.T) {
-	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	store := cookie.NewStore([]byte("secret"))
 	server := server.NewRouter()
 	server.Use(SetCors())
@@ -34,7 +34,7 @@ func Test_CalendarDeleteEvent(t *testing.T) {
 		Ps string `json:"password"`
 	}{
 		Ac: "a001@gmail.com",
-		Ps: "a001",
+		Ps: "a001a001",
 	}
 
 	requests := []struct {
@@ -42,14 +42,16 @@ func Test_CalendarDeleteEvent(t *testing.T) {
 		Status int
 	}{
 		{
+			// 應該會被刪除的一筆資料
 			Event: delevent{
-				Title:      "0123gwYSKl",
-				StartTime:  "2014-01-21 12:45:32",
-				RemindTime: "-3m",
+				Title:      "EventOK to change",
+				StartTime:  "2000-00-00 12:00:00",
+				RemindTime: "-4m",
 			},
 			Status: 204,
 		},
 		{
+			// 沒有這筆資料, 空做刪除的動作
 			Event: delevent{
 				Title:      "No Exist event delete",
 				StartTime:  "2014-01-06 14:06:24",

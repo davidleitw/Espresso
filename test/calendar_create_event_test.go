@@ -28,8 +28,8 @@ type event struct {
 }
 
 func Test_CalendarCreateEvent(t *testing.T) {
-	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	store := cookie.NewStore([]byte("secret"))
 	server := server.NewRouter()
 	server.Use(SetCors())
@@ -41,7 +41,7 @@ func Test_CalendarCreateEvent(t *testing.T) {
 		Ps string `json:"password"`
 	}{
 		Ac: "a001@gmail.com",
-		Ps: "a001",
+		Ps: "a001a001",
 	}
 
 	request := []struct {
@@ -49,10 +49,11 @@ func Test_CalendarCreateEvent(t *testing.T) {
 		Status int
 	}{
 		{
+			// 合法的一筆資料
 			Event: event{
-				Title:   "0123" + RandString(6),
-				Start:   "2014-01-21 12:45:32",
-				End:     "2014-01-21 12:55:32",
+				Title:   "TestEvent",
+				Start:   "2019-04-08 12:45:32",
+				End:     "2029-01-21 12:55:32",
 				Remind:  "-3m",
 				Context: "Test event 001",
 				Rurl:    "gamer.com.tw",
@@ -60,15 +61,28 @@ func Test_CalendarCreateEvent(t *testing.T) {
 			Status: 200,
 		},
 		{
+			// 標題, user, 應提醒時間同時重複 報錯
 			Event: event{
-				Title:   "0123",
-				Start:   "2014-01-21 12:45:32",
-				End:     "2014-01-21 12:55:32",
+				Title:   "TestEvent",
+				Start:   "2019-04-08 12:45:32",
+				End:     "2024-01-21 12:55:32",
 				Remind:  "-3m",
-				Context: "Test event 001",
+				Context: "Test event 002",
 				Rurl:    "gamer.com.tw",
 			},
 			Status: 400,
+		},
+		{
+			// 後續動作要拿來修改的事件
+			Event: event{
+				Title:   "EventOK to change",
+				Start:   "2000-00-00 12:00:00",
+				End:     "2000-00-00 12:00:05",
+				Remind:  "-4m",
+				Context: "This event should be change after this unit test.",
+				Rurl:    "gamer.com.tw",
+			},
+			Status: 200,
 		},
 	}
 
@@ -82,7 +96,6 @@ func Test_CalendarCreateEvent(t *testing.T) {
 		// 先把登入之後獲得的response print出來, 取得裡面mysession的value
 		// 以便於後續測試登入過後的api使用
 		// create event if login
-
 		reqBody, _ := json.Marshal(req.Event)
 		r := httptest.NewRequest("POST", "/api/calendar/a001/createNewEvent",
 			bytes.NewReader(reqBody))

@@ -17,8 +17,8 @@ type login struct {
 }
 
 func TestUserLoginCatcher_Login(t *testing.T) {
-	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
-	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	server := server.NewRouter()
 	defer models.DB.Close()
 
@@ -30,7 +30,7 @@ func TestUserLoginCatcher_Login(t *testing.T) {
 			// 合法登入
 			Req: login{
 				Ac: "a001@gmail.com",
-				Ps: "a001",
+				Ps: "a001a001",
 			},
 			Status: 200,
 		},
