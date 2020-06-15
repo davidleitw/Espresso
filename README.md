@@ -1,30 +1,12 @@
 # Espresso
 
-    .
-    ├── api
-    │   ├── main.go
-    │   └── user.go
-    ├── go.mod
-    ├── go.sum
-    ├── main.go
-    ├── models
-    │   ├── init.go
-    │   └── users.go
-    ├── README.md
-    ├── serialization
-    │   └── base.go
-    ├── server
-    │   └── router.go
-    ├── service
-    │   ├── user_login_service.go
-    │   ├── user_register_service.go
-    │   └── user_register_service_test.go
-    └── test
-        └── test.go
+## 專題架構
 
-需要討論的問題
-1. Get 一個行程的參數要如何制定
-2. 兩個行程同時段問題
-3. 統一response那部份有些問題, 大概知道要如何解決
+<img src="https://media.discordapp.net/attachments/644540054102081552/722154687700271184/2020-06-16_02-18-56_.png">
 
 
+本專案預計新增gin基本觀念, 以及搭配gorm的一些使用方法
+
+因為剛接觸後端不久, 可能有些觀念上是錯誤的, 也請各位大大糾正了
+
+也歡迎發PR來互相交流喔XD
