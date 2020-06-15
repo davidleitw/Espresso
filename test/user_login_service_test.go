@@ -17,7 +17,8 @@ type login struct {
 }
 
 func TestUserLoginCatcher_Login(t *testing.T) {
-	models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	//models.ConnectDataBase("davidleitw:davidleitw0308@/calendardb?charset=utf8&parseTime=True&loc=Local")
+	models.ConnectDataBase("root:@(database)/calendardb?charset=utf8&parseTime=True&loc=Local")
 	server := server.NewRouter()
 	defer models.DB.Close()
 
