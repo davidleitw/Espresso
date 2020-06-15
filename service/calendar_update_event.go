@@ -9,7 +9,7 @@ import (
 type UpdateEventPoster struct {
 	OldTitle  string `json:"OldTitle"`
 	OldStart  string `json:"OldStart"`
-	OldRemind string `json:"OldRemind`
+	OldRemind string `json:"OldRemind"`
 	Title     string `json:"Title"`
 	Start     string `json:"StartTime"`
 	End       string `json:"EndTime"`

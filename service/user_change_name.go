@@ -7,8 +7,8 @@ import (
 )
 
 type Name struct {
-	NewName string `json: "NewName"`
-	UserID  string `json: "UserID"`
+	NewName string `json:"NewName"`
+	UserID  string `json:"UserID"`
 }
 
 func (n *Name) ChangeName() serial.Response {
