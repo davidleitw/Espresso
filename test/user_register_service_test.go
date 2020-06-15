@@ -31,13 +31,23 @@ func TestUserRegisterCatcher_Register(t *testing.T) {
 	}{
 		{
 			Req: register{
+				Mail: "a8763" + RandString(4) + "@gmail.com",
+				Name: "Kirito" + RandString(2),
+				Pas1: "20221106",
+				Pas2: "20221106",
+				Rid:  "00000000",
+			},
+			Status: 200,
+		},
+		{
+			Req: register{
 				Mail: "a8763@gmail.com",
 				Name: "Kirito",
 				Pas1: "20221106",
 				Pas2: "20221106",
 				Rid:  "00000000",
 			},
-			Status: 200,
+			Status: 403,
 		},
 		{
 			Req: register{
