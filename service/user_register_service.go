@@ -23,15 +23,15 @@ func (service *UserRegisterCatcher) Register() serial.Response {
 		return serial.BuildResponse(403, nil, "密碼驗證錯誤")
 	}
 
+	if len(service.UserPass) < 8 {
+		return serial.BuildResponse(403, "null", "密碼的長度不能小於八碼")
+	}
+
 	user := &models.Users{
 		User_Id:    service.UserMail,
 		User_Name:  service.UserName,
 		PassWord:   service.UserPass,
 		Mobile_Rid: service.UserRid,
-	}
-
-	if len(user.PassWord) < 8 {
-		return serial.BuildResponse(403, "null", "密碼的長度不能小於八碼")
 	}
 
 	var count int = 0

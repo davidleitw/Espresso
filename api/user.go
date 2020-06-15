@@ -138,7 +138,7 @@ func AuthSessionMiddle() gin.HandlerFunc {
 		login := sessions.Default(ctx).Get("islogin")
 		log.Println(login)
 		if login == nil {
-			// http.StatusUnauthorized => 400 未認證，可能需要登入或 Token
+			// http.StatusUnauthorized => 401 未認證，可能需要登入或 Token
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"status":  http.StatusUnauthorized,
 				"message": "Not login",
