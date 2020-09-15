@@ -37,6 +37,7 @@ func (service *CreateEventPoster) CalendarCreateEvent(userID string) serial.Resp
 		Title:        service.Title,                    // 標題
 		Context:      service.Context,                  // 內容
 		ReferenceUrl: service.Rurl,                     // 參考網址
+		Remind:       service.Remind,
 	}
 
 	ed := &models.EventDetail{
