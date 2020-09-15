@@ -53,6 +53,7 @@ type EventMain struct {
 	Title        string `gorm:"size:50;"`
 	Context      string
 	ReferenceUrl string
+	Remind       string // -xxm, 這種格式另外存起來
 }
 
 type EventDetail struct {
@@ -95,6 +96,6 @@ func GetTimeString(t time.Time) string {
 func GetRemindTime(start string, remind string) string {
 	s := GetTimeValue(start)
 	t1, _ := time.ParseDuration(remind)
-	s = s.Add(t1)
+	s = s.Add(-t1)
 	return s.Format("2006-01-02 15:04:05")
 }
