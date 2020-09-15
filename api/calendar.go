@@ -4,6 +4,7 @@ import (
 	"Espresso/models"
 	"Espresso/serialization"
 	"Espresso/service"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 type EventItem struct {
 	Title     string
 	StartTime string
+	Remind    string
 }
 
 // @Summary 登入時該用戶所有資料的概要
@@ -32,7 +34,7 @@ func CalendarGetAllEvent(ctx *gin.Context) {
 		cID := item.CalendarID
 		var EventInfo models.EventMain
 		models.DB.Model(&models.EventMain{}).Where("calendar_id=?", cID).First(&EventInfo)
-		item := EventItem{Title: EventInfo.Title, StartTime: EventInfo.StartTime}
+		item := EventItem{Title: EventInfo.Title, StartTime: EventInfo.StartTime, Remind: EventInfo.Remind}
 		EventSet = append(EventSet, item)
 	}
 
@@ -132,6 +134,7 @@ func CalendarDeleteEvent(ctx *gin.Context) {
 	//session := sessions.Default(ctx)
 
 	if err := ctx.ShouldBind(&servicer); err == nil {
+		log.Println(servicer.RemindTime)
 		res := servicer.Delete(ctx.Param("ID"))
 		ctx.JSON(serialization.GetResStatus(res).(int), res)
 	}
